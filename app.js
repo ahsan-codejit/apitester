@@ -1,20 +1,22 @@
-
-//require('./customlogger.js')();
-
 var Tester = require('./tester.js');
-var options = {
-    method: 'POST',
-    uri: 'https://apidev.omnea.org/v2/submissions/347616',
-    json: true, // Automatically stringifies the body to JSON 
-    headers:{
-        apiKey: '46LOGVr3v6fDWYH23Ciz'
-    }
-};
-var testerObj = new Tester(options);
-for(let i=0; i<10; i++){
-    testerObj.run();
+var config = require('./config.js');
+const winston = require('winston')
+var options = config[process.env.NODE_ENV || 'test'];
+if(options) {
+	var testerObj = new Tester(options);
+	var i =1;
+	var runnerInterval = setInterval(function(){
+		winston.info(i++, '. Calling....')
+		testerObj.run();
+	}, 100);
+	setTimeout(function(){
+		clearInterval(runnerInterval);
+	},1000);
+} else {
+	winston.warn('config option is not set.');
 }
-
+	
+	
 
  
     

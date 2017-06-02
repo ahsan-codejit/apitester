@@ -1,5 +1,6 @@
 var request = require('request-promise-native');
-require('request-debug')(request);
+//require('request-debug')(request);
+const winston = require('winston')
 module.exports = class Tester {
 	constructor (options){
 		this.options = options;
@@ -10,14 +11,12 @@ module.exports = class Tester {
 	run(){
 		request(this.options)
 	    .then((body) => {
-	    	console.log('then block');
-	       	console.log(body);
+	       	winston.debug('response body:', body)
 	    })
 	    .catch((err)=>{
-	    	console.log('catch block');
 	    	var error = err;
 	    	if(err.response&&err.response.body) error = err.response.body;
-	    	console.log('Error: ', err.response.body);
+	    	winston.error('Error: ', error);
 	        // POST failed... 
 	    });
 	}
